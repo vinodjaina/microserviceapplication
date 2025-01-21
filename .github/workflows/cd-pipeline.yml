@@ -10,18 +10,30 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Login to Azure using the Azure credentials stored in GitHub Secrets
+      # Step 1: Login to Azure using Azure CLI authentication
       - name: Login to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Step 2: Set up AKS context
+      # Step 2: Install kubelogin to support AAD authentication for AKS
+      - name: Install kubelogin
+        run: |
+          curl -LO https://github.com/Azure/kubelogin/releases/download/v0.0.12/kubelogin-linux-amd64.zip
+          unzip kubelogin-linux-amd64.zip
+          sudo mv bin/linux_amd64/kubelogin /usr/local/bin/
+
+      # Step 3: Set up AKS context
       - name: Set up AKS context
         run: |
           az aks get-credentials --resource-group vinodrg --name vinodaks
 
-      # Step 3: Deploy to AKS by setting the new container image
+      # Step 4: Authenticate to AKS using kubelogin
+      - name: Authenticate to AKS using kubelogin
+        run: |
+          kubelogin convert-kubeconfig -l azurecli
+
+      # Step 5: Deploy to AKS
       - name: Deploy to AKS
         run: |
           kubectl set image deployment/sample-app sample-app=vinodacrgh.azurecr.io/sample-app:${{ github.sha }}
