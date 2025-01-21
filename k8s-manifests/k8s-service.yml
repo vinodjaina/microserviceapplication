@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: samplemicroservice
+  name: sample-App
 spec:
   type: LoadBalancer
   ports:
   - port: 80
     targetPort: 3000
   selector:
-    app: samplemicroservice
+    app: sample-App

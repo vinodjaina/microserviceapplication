@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: samplemicroservice
+  name: sample-app
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: samplemicroservice
+      app: sample-app
   template:
     metadata:
       labels:
-        app: samplemicroservice
+        app: sample-app
     spec:
       containers:
-      - name: samplemicroservice
-        image: vinodacrgh.azurecr.io/samplemicroservice:latest
+      - name: sample-app
+        image: vinodacrgh.azurecr.io/sample-app:latest
         ports:
         - containerPort: 3000

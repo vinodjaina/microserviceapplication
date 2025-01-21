@@ -27,4 +27,4 @@ jobs:
 
       - name: Deploy to AKS
         run: |
-          kubectl set image deployment/samplemicroservice samplemicroservice=vinodacrgh.azurecr.io/samplemicroservice:${{ github.sha }}
+          kubectl set image deployment/sample-app sample-app=vinodacrgh.azurecr.io/sample-app:${{ github.sha }}

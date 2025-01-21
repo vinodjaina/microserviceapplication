@@ -22,6 +22,6 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t vinodacrgh.azurecr.io/samplemicroservice:${{ github.sha }} .
+          docker build -t vinodacrgh.azurecr.io/sample-app:${{ github.sha }} .
           echo "${{ secrets.AZURE_ACR_PASSWORD }}" | docker login vinodacrgh.azurecr.io --username vinodacrgh --password-stdin
-          docker push vinodacrgh.azurecr.io/samplemicroservicep:${{ github.sha }}
+          docker push vinodacrgh.azurecr.io/sample-app:${{ github.sha }}
