@@ -10,21 +10,62 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Login to Azure using the Azure credentials stored in GitHub Secrets
       - name: Login to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Install kubelogin
-        run: |
-          curl -LO https://github.com/Azure/kubelogin/releases/download/v0.0.12/kubelogin-linux-amd64.zip
-          unzip kubelogin-linux-amd64.zip
-          sudo mv bin/linux_amd64/kubelogin /usr/local/bin/
-
+      # Step 2: Set up AKS context
       - name: Set up AKS context
         run: |
           az aks get-credentials --resource-group vinodrg --name vinodaks
 
+      # Step 3: Deploy to AKS by setting the new container image
       - name: Deploy to AKS
         run: |
           kubectl set image deployment/sample-app sample-app=vinodacrgh.azurecr.io/sample-app:${{ github.sha }}
+
+      # Optional: Verify the rollout
+      - name: Verify Deployment
+        run: |
+          kubectl rollout status deployment/sample-app
+
+      # Optional: Check the logs of the deployed application
+      - name: Check Logs
+        run: |
+          kubectl logs -l app=sample-app
+
+
+
+#name: CD Pipeline
+#
+#on:
+#  workflow_run:
+#    workflows: ["CI Build Pipeline"]
+#    types:
+#      - completed
+#
+#jobs:
+#  deploy:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Login to Azure
+#        uses: azure/login@v1
+#        with:
+#          creds: ${{ secrets.AZURE_CREDENTIALS }}
+#
+#      - name: Install kubelogin
+#        run: |
+#          curl -LO https://github.com/Azure/kubelogin/releases/download/v0.0.12/kubelogin-linux-amd64.zip
+#          unzip kubelogin-linux-amd64.zip
+#          sudo mv bin/linux_amd64/kubelogin /usr/local/bin/
+#
+#      - name: Set up AKS context
+#        run: |
+#          az aks get-credentials --resource-group vinodrg --name vinodaks
+#
+#      - name: Deploy to AKS
+#        run: |
+#          kubectl set image deployment/sample-app sample-app=vinodacrgh.azurecr.io/sample-app:${{ github.sha }}
+#
