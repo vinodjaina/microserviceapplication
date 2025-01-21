@@ -22,6 +22,6 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t <acr-name>.azurecr.io/sample-app:${{ github.sha }} .
-          echo "${{ secrets.AZURE_ACR_PASSWORD }}" | docker login <acr-name>.azurecr.io --username <acr-username> --password-stdin
-          docker push <acr-name>.azurecr.io/sample-app:${{ github.sha }}
+          docker build -t vinodacrgh.azurecr.io/sample-app:${{ github.sha }} .
+          echo "${{ secrets.AZURE_ACR_PASSWORD }}" | docker login vinodacrgh.azurecr.io --username vinodacrgh --password-stdin
+          docker push vinodacrgh.azurecr.io/sample-app:${{ github.sha }}
